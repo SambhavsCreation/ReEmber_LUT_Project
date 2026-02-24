@@ -9,6 +9,24 @@ Authentication notes:
 - If a Bearer token is sent and request body/query includes `user_id` / `uid` / `userId`, values must match token `sub` or backend returns `403`.
 - Cognito pool/app client are currently hardcoded in backend settings for `User pool - 8vafno` and app client `StudentProject`.
 
+## Public Database Query
+
+### GET `/api/database/query`
+What it does: Executes any SQL query (read/write/admin) against the backend Aurora database.
+
+Authentication:
+- No Bearer token is required.
+
+Required query: `sql` (single SQL statement)
+
+```bash
+curl "http://localhost:8000/api/database/query?sql=SELECT%20id%2C%20item_name%20FROM%20household_items"
+```
+
+```bash
+curl "http://localhost:8000/api/database/query?sql=UPDATE%20household_items%20SET%20active%20%3D%20false%20WHERE%20id%20%3D%20%274b2dd2a3-5d1d-4ca2-90a0-754f86f8e2cb%27%3A%3Auuid"
+```
+
 ## Accounts
 
 ### GET `/api/auth/ping`
@@ -373,28 +391,6 @@ Optional query: `item_name`
 
 ```bash
 curl "http://localhost:8000/api/items/search?user_id=11111111-1111-1111-1111-111111111111&item_name=lamp"
-```
-
-### GET `/api/items/receipts`
-What it does: Lists item receipt records and returns pre-signed URLs to access receipt files.
-
-Required query: `uid`, `iid` (or `item_id`)
-Optional query: `limit`, `after_id`, `expires`
-
-```bash
-curl "http://localhost:8000/api/items/receipts?uid=11111111-1111-1111-1111-111111111111&iid=4b2dd2a3-5d1d-4ca2-90a0-754f86f8e2cb"
-```
-
-### POST `/api/items/receipts/upload`
-What it does: Uploads a receipt image and attaches it to an item.
-
-Required body: `user_id`, `item_id`, `image_data`
-Optional body: `file_name`, `content_type`
-
-```bash
-curl -X POST "http://localhost:8000/api/items/receipts/upload" \
-  -H "Content-Type: application/json" \
-  -d '{"user_id":"11111111-1111-1111-1111-111111111111","item_id":"4b2dd2a3-5d1d-4ca2-90a0-754f86f8e2cb","image_data":"<base64-image>","file_name":"receipt.jpg","content_type":"image/jpeg"}'
 ```
 
 ### GET `/api/household_items/{item_id}`
