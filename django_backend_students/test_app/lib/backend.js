@@ -29,3 +29,35 @@ export function getAuthResendCodeUrl() {
 export function getAuthLoginUrl() {
   return `${getBackendBaseUrl()}/api/auth/login`;
 }
+
+export function getMediaImageUploadUrl() {
+  return `${getBackendBaseUrl()}/api/media/images/upload-url`;
+}
+
+export function getMediaImageFetchUrl() {
+  return `${getBackendBaseUrl()}/api/media/images/fetch-url`;
+}
+
+export function getMediaVideoUploadUrl() {
+  return `${getBackendBaseUrl()}/api/media/videos/upload-url`;
+}
+
+export function getMediaVideoFetchUrl() {
+  return `${getBackendBaseUrl()}/api/media/videos/fetch-url`;
+}
+
+export function getMediaVideoMultipartInitUrl() {
+  return `${getBackendBaseUrl()}/api/media/videos/multipart/init`;
+}
+
+export function getMediaVideoMultipartPartUrl() {
+  return `${getBackendBaseUrl()}/api/media/videos/multipart/part-url`;
+}
+
+export function getMediaVideoMultipartCompleteUrl() {
+  return `${getBackendBaseUrl()}/api/media/videos/multipart/complete`;
+}
+
+export function getMediaVideoMultipartAbortUrl() {
+  return `${getBackendBaseUrl()}/api/media/videos/multipart/abort`;
+}

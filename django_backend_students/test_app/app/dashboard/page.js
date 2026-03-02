@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import LogoutButton from "../components/logout-button";
+import MediaExamples from "../components/media-examples";
 import { getAuthMeUrl, getBackendBaseUrl } from "../../lib/backend";
 
 async function fetchCurrentUser(token) {
@@ -49,6 +50,8 @@ export default async function DashboardPage() {
         </p>
         <div className="spacer" />
         <pre>{JSON.stringify(user, null, 2)}</pre>
+        <div className="spacer" />
+        <MediaExamples />
       </div>
     </main>
   );

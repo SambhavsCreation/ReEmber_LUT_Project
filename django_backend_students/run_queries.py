@@ -59,7 +59,11 @@ EXAMPLES: dict[str, str] = {
 def call_query_api(base_url: str, sql: str, timeout: float) -> tuple[int, dict]:
   query = urllib.parse.urlencode({"sql": sql})
   url = f"{base_url.rstrip('/')}{QUERY_ENDPOINT_PATH}?{query}"
-  req = urllib.request.Request(url=url, method="GET")
+  req = urllib.request.Request(
+    url=url,
+    method="GET",
+    headers={"Accept": "application/json"},
+  )
 
   try:
     with urllib.request.urlopen(req, timeout=timeout) as resp:
@@ -67,11 +71,26 @@ def call_query_api(base_url: str, sql: str, timeout: float) -> tuple[int, dict]:
       return resp.getcode(), json.loads(body or "{}")
   except urllib.error.HTTPError as exc:
     body = exc.read().decode("utf-8", errors="replace")
+    content_type = str(exc.headers.get("Content-Type", "")).lower()
     try:
       parsed = json.loads(body or "{}")
     except json.JSONDecodeError:
-      parsed = {"error": body}
+      if "text/html" in content_type:
+        parsed = {
+          "error": "Non-JSON error response from backend.",
+          "status_code": exc.code,
+          "content_type": content_type,
+          "hint": "This usually means /api/database/query is not present on the running server. Restart with the latest backend build.",
+        }
+      else:
+        parsed = {"error": body}
     return exc.code, parsed
+  except urllib.error.URLError as exc:
+    return 503, {
+      "error": "Unable to reach backend.",
+      "detail": str(exc.reason),
+      "hint": "Start the backend server and verify --base-url is correct.",
+    }
 
 
 def print_examples() -> None:

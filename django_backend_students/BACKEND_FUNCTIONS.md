@@ -564,6 +564,97 @@ Required query: `key` (must begin with `videos/`)
 curl "http://localhost:8000/api/videos/stream?key=videos/11111111-1111-1111-1111-111111111111/example.mp4"
 ```
 
+### POST `/api/media/images/upload-url`
+What it does: Generates a pre-signed PUT URL to upload an image to the fixed bucket `reember-test-bucket`.
+
+Required body: `path`
+Optional body: `content_type` (must be `image/*`), `metadata` (object), `expires_in` (60-86400)
+
+```bash
+curl -X POST "http://localhost:8000/api/media/images/upload-url" \
+  -H "Content-Type: application/json" \
+  -d '{"path":"images/custom/avatar.jpg","content_type":"image/jpeg"}'
+```
+
+### GET `/api/media/images/fetch-url`
+What it does: Returns a pre-signed GET URL for an existing image in `reember-test-bucket`.
+
+Required query: `path`
+Optional query: `expires_in` (60-86400)
+
+```bash
+curl "http://localhost:8000/api/media/images/fetch-url?path=images/custom/avatar.jpg"
+```
+
+### POST `/api/media/videos/upload-url`
+What it does: Generates a pre-signed PUT URL to upload a video to the fixed bucket `reember-test-bucket`.
+
+Required body: `path`
+Optional body: `content_type` (must be `video/*` or `application/octet-stream`), `metadata` (object), `expires_in` (60-86400)
+
+```bash
+curl -X POST "http://localhost:8000/api/media/videos/upload-url" \
+  -H "Content-Type: application/json" \
+  -d '{"path":"videos/raw/room-walkthrough.mp4","content_type":"video/mp4"}'
+```
+
+### GET `/api/media/videos/fetch-url`
+What it does: Returns a pre-signed GET URL for an existing video in `reember-test-bucket`.
+
+Required query: `path`
+Optional query: `expires_in` (60-86400)
+
+```bash
+curl "http://localhost:8000/api/media/videos/fetch-url?path=videos/raw/room-walkthrough.mp4"
+```
+
+### POST `/api/media/videos/multipart/init`
+What it does: Creates a multipart upload session in `reember-test-bucket` for large videos.
+
+Required body: `path`
+Optional body: `content_type` (`video/*` or `application/octet-stream`), `metadata` (object), `part_size_bytes` (>= 5242880), `file_size_bytes`, `expires_in`
+
+```bash
+curl -X POST "http://localhost:8000/api/media/videos/multipart/init" \
+  -H "Content-Type: application/json" \
+  -d '{"path":"videos/raw/room-walkthrough.mp4","content_type":"video/mp4","part_size_bytes":67108864,"file_size_bytes":2147483648}'
+```
+
+### POST `/api/media/videos/multipart/part-url`
+What it does: Returns a pre-signed `upload_part` URL for one part number.
+
+Required body: `path`, `upload_id`, `part_number`
+Optional body: `expires_in` (60-86400)
+
+```bash
+curl -X POST "http://localhost:8000/api/media/videos/multipart/part-url" \
+  -H "Content-Type: application/json" \
+  -d '{"path":"videos/raw/room-walkthrough.mp4","upload_id":"<UPLOAD_ID>","part_number":1}'
+```
+
+### POST `/api/media/videos/multipart/complete`
+What it does: Finalizes multipart upload after all parts are uploaded.
+
+Required body: `path`, `upload_id`, `parts` (array of `{part_number, etag}`)
+Optional body: `fetch_expires_in` (60-86400)
+
+```bash
+curl -X POST "http://localhost:8000/api/media/videos/multipart/complete" \
+  -H "Content-Type: application/json" \
+  -d '{"path":"videos/raw/room-walkthrough.mp4","upload_id":"<UPLOAD_ID>","parts":[{"part_number":1,"etag":"\"etag-part-1\""},{"part_number":2,"etag":"\"etag-part-2\""}]}'
+```
+
+### POST `/api/media/videos/multipart/abort`
+What it does: Cancels an in-progress multipart upload.
+
+Required body: `path`, `upload_id`
+
+```bash
+curl -X POST "http://localhost:8000/api/media/videos/multipart/abort" \
+  -H "Content-Type: application/json" \
+  -d '{"path":"videos/raw/room-walkthrough.mp4","upload_id":"<UPLOAD_ID>"}'
+```
+
 ### GET `/api/jobs`
 What it does: Lists recent job records for a user.
 

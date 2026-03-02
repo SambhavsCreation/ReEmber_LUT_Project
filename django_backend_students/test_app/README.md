@@ -41,9 +41,15 @@ Override with env var if needed:
 - `/confirm-signup` signup confirmation page
 - `/` redirects to `/login`
 - `/dashboard` protected page
+- `/dashboard` now includes media upload/fetch examples for image/video endpoints
 - `/api/login` local route that signs in via backend and sets cookie
 - `/api/register` local route that proxies backend registration
 - `/api/confirm-signup` local route that proxies backend confirmation
 - `/api/resend-signup-code` local route that proxies backend resend-code
 - `/api/logout` local route that clears cookie
 - `/api/session` local route that checks current session against backend
+- `/api/media/images/fetch-url` local proxy for image fetch URL generation
+- `/api/media/videos/fetch-url` local proxy for video fetch URL generation
+- `/api/media/examples/image-upload` example route: file upload via signed URL + fetch URL
+- `/api/media/examples/video-upload` example route: file upload via signed URL + fetch URL
+- `/api/media/examples/video-upload-multipart` example route: multipart video upload (large files)

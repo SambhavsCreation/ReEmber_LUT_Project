@@ -33,12 +33,26 @@ h1 {
   font-size: 1.7rem;
 }
 
+h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.28rem;
+}
+
+h3 {
+  margin: 0 0 0.45rem 0;
+  font-size: 1.02rem;
+}
+
 .muted {
   color: #6b7280;
 }
 
 .spacer {
   height: 1rem;
+}
+
+.spacer-sm {
+  height: 0.6rem;
 }
 
 textarea,
@@ -120,8 +134,39 @@ pre {
   font-size: 0.85rem;
 }
 
+.small-pre {
+  margin-top: 0.7rem;
+  max-height: 180px;
+}
+
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.media-block {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 0.85rem;
+  background: #f8fafc;
+}
+
+.preview-image,
+.preview-video {
+  width: 100%;
+  max-height: 240px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  background: #000;
+}
+
 @media (max-width: 640px) {
   .shell {
     padding-top: 1rem;
+  }
+
+  .media-grid {
+    grid-template-columns: 1fr;
   }
 }
